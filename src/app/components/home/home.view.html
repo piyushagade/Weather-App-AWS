@@ -27,7 +27,7 @@
             <sc-current
                 [weatherData]="weatherData"
                 (weatherReceived)="getWeatherData($event)"
-                (newCityName)="getCoords($event)"
+                (newCityName)="changeLocation($event)"
                 (goToMyLocationEvent)="goToMyLocation()">
             </sc-current>
 

@@ -4,13 +4,14 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class WeatherService{
-    weather = "http://ec2-54-149-154-184.us-west-2.compute.amazonaws.com:3000/weather/**/**"
+    server = 'ec2-54-202-210-202.us-west-2.compute.amazonaws.com'
+    weather = "http://" + this.server + ":3000/weather/**"
     
     constructor(private _jsonp: Jsonp, private _http: Http){}
 
     // Get weather data from backend api
-    getWeather(lat: string, lng: string){
-        return this._http.get(this.weather.replace("**", lat).replace("**", lng))
+    getWeather(name: string){
+        return this._http.get(this.weather.replace("**", name))
             .map(response => response.json())
             .catch(error => {
                 console.log("Error fetching JSON");

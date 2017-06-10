@@ -59,50 +59,42 @@ export class HomeComponent {
   @Output() weatherReceived = new EventEmitter();
   
   constructor(public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService) {
+    
     // Get current coordinates using Geolocation API
     this.isBusy = true;
-    this._gl.getCurrentPosition().forEach(
-                (position: Position) => {
-                   // Get the name of the place using Google's geocoder API
-                   this.current_lat = position.coords.latitude.toString();
-                   this.current_lng = position.coords.longitude.toString();
-                   this.location_lat = this.current_lat;
-                   this.location_lng = this.current_lng;
+    // this._gl.getCurrentPosition().forEach(
+    //     (position: Position) => {
+    //         // Get the name of the place using Google's geocoder API
+    //         this.current_lat = position.coords.latitude.toString();
+    //         this.current_lng = position.coords.longitude.toString();
+    //         this.location_lat = this.current_lat;
+    //         this.location_lng = this.current_lng;
 
-                   this.getCityName(this.current_lat, this.current_lng);
-                }
-            )
-            .then(() => {
-                  // Get weather data for current coordinates
-                  this.weatherLoaded = false;
-                  this._ws.getWeather(this.current_lat, this.current_lng)
-                    .subscribe(
-                      response => {
-                        this.weatherData = response.current;
-                        this.weatherHistory = response.history;
-                      },
-                      error => console.log("Error while getting weather data for user's location."),
-                      () => this.onWeatherGet()
-                    );  
-            })
-            .catch(
-                (error: PositionError) => {
-                    if (error.code > 0) {
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                console.log("Location denied");
-                                this.onLocationDeny();
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                console.log("Position unavailable");
-                                break;
-                            case error.TIMEOUT:
-                                console.log("Position timeout");
-                                break;
-                        }
-                    }
-                });
-  }
+    //         this.getCityName(this.current_lat, this.current_lng);
+    //     }
+    //   )
+    //   .then(() => {
+        
+    //   })
+      
+
+    this._gl.getCurrentPositionAPI()
+      .subscribe(
+        response => {
+          console.log(response.location.lat.toString(), response.location.lng.toString())
+          this.current_lat = response.location.lat.toString();
+          this.current_lng = response.location.lng.toString();
+          this.location_lat = this.current_lat;
+          this.location_lng = this.current_lng;
+          
+          this.getCityName(this.current_lat, this.current_lng);
+
+          // Get weather data for current coordinates
+          this.weatherLoaded = false;
+          this.cityName = this.location_cityName;
+          this.getWeatherByCityName();
+        }
+      )}
 
   // Get city name from coordinates acquired in the constructor
   getCityName(lat: string, long: string){
@@ -120,33 +112,25 @@ export class HomeComponent {
 
 
   // Get coordinates from city name when user switches to another location
-  getCoords(name: string){
+  changeLocation(name: string){
+    this.cityName = name;
+
     this.setBusy();
-    
-    // Get the coordinates
-    this._gc.getCoords(name).subscribe(
-      response => this.getWeatherCustomLocation(name, response.results[0].geometry.location.lat, response.results[0].geometry.location.lng),
-      error => console.log("Couldn't get coordinates.")
-    )
+    this.getWeatherByCityName();
   }
 
   // Show weather from user's location when asked for manually
   goToMyLocation(){
-    this.getWeatherCustomLocation(this.location_cityName, this.location_lat, this.location_lng);
+    this.getWeatherByCityName();
   }
 
   // Get weather data for current coordinates
-  getWeatherCustomLocation(name: string, lat: string, lng: string){
-    this.current_lat = lat;
-    this.current_lng = lng;
-
-    this.cityName = name;
-
+  getWeatherByCityName(){
     // Share cityName
-    this._s.sendCityName({ cityName: this.cityName });
+    this._s.sendCityName({ cityName: this.cityName });    
 
     // Set weatherData
-    this._ws.getWeather(this.current_lat, this.current_lng)
+    this._ws.getWeather(this.cityName)
       .subscribe(
         response => {
           this.weatherData = response.current;
@@ -172,32 +156,19 @@ export class HomeComponent {
     // Share data to other components do they can update their views
     this._s.sendWeatherData(this.weatherData);
     this._s.sendWeatherHistory(this.weatherHistory);
-
-    // // Acquire weather history for current coordinates after current weather is obtained
-    // for(let i = 0; i < this.factor.length; i++){
-    //     let time = this.wd_currently.time - 86400 * this.factor[i];
-        
-    //     this._ws.getWeatherHistory(this.current_lat, this.current_lng, time.toString())
-    //       .subscribe(
-    //         response => this.weatherHistory.push(response.currently),
-    //         error => console.log("Error while getting weather history"),
-    //         () => {    
-    //           // Share history data to other components
-    //           this._s.sendWeatherHistory(this.weatherHistory);
-    //         }
-    //       );
-    // }
   }
 
   // Handle if user denies permission to obtain user location
   onLocationDeny(){
     this.locationDenied = true;
 
-    // So, show weather of New Delhi instead
-    this.getCoords('New Delhi');
-
+    // So, show weather of a random city instead
+    let cities = ['Abu Dhabi', 'Chelsea', 'Cairo', 'Paris', 'New Delhi', 'Bangkok', 'Sydney', 'Tampa', 'San Francisco', 'Venice'];
+    let city = cities[Math.floor(Math.random() * 9)];
+    this.changeLocation(city);
+    
     // Share cityName
-    this._s.sendCityName({ cityName: this.cityName });
+    this._s.sendCityName({ cityName: city });
 
     // Let every component know
     this._s.sendLocationDenied({ locationDenied: this.locationDenied });

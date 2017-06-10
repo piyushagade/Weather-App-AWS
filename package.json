@@ -1,5 +1,5 @@
 {
-  "name": "chatapper",
+  "name": "SkyCast",
   "version": "0.0.0",
   "license": "MIT",
   "angular-cli": {},
@@ -26,7 +26,6 @@
     "angular2-emoji-picker": "^1.0.4",
     "angular2-emojify": "^0.1.0",
     "angular2-google-maps": "^0.17.0",
-    "angular2-localstorage": "^0.4.0",
     "angular2-markdown": "^1.5.1",
     "angularfire2": "^2.0.0-beta.6",
     "chart.js": "^2.6.0",
@@ -34,6 +33,7 @@
     "firebase": "^3.6.4",
     "jquery": "^3.2.1",
     "ng2-charts": "^1.6.0",
+    "ng2-typeahead": "^1.2.0",
     "ngx-pipes": "^1.6.1",
     "rxjs": "^5.0.1",
     "ts-helpers": "^1.1.1",

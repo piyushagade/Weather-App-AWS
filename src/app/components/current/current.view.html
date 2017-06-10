@@ -148,7 +148,35 @@
                         </div>
 
                         <div class="row">
-                            <input type="text" class="inp-solid" style="margin-left: 10px;" [(ngModel)]='custom_city' #newLocation [placeholder]="showChangeLocationTip ? 'Enter a city and press enter.' : 'Change location...'" (blur)="onChangeLocationBlur()" (focus)="onChangeLocationFocus()" (keyup.enter)="getCoords(newLocation.value, true)"/>
+                            <input type="text" class="inp-solid" style="margin-left: 10px;" 
+                                [(ngModel)]='custom_city' 
+                                #newLocation
+                                (keyup)="showSuggestions(newLocation.value)" 
+                                [placeholder]="showChangeLocationTip ? 'Enter a city and press enter.' : 'Change location...'" 
+                                (blur)="onChangeLocationBlur()" 
+                                (focus)="onChangeLocationFocus()" 
+                                (keyup)="showSuggestions(name)"
+                                (keyup.enter)="getWeather(newLocation.value, true)"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="suggestions">
+                                <!--Suggestion-->
+                                <span class="suggestions-title">Suggestions</span>
+                                <ul class=""  *ngIf="suggestions.length > 0">
+                                    <li *ngFor="let suggestion of suggestions; let i = index;" (click)="suggestionSelected(i)">{{ suggestion }}</li>
+                                </ul>
+
+                                <!--Random places-->
+                                <ul class=""  *ngIf="suggestions.length == 0 && !showChangeLocationTip">
+                                    <li *ngFor="let suggestion of cities; let i = index;" (click)="randomCitySelected(i)">{{ suggestion }}</li>
+                                </ul>
+
+                                <!--Random places-->
+                                <ul *ngIf="suggestions.length == 0 && showChangeLocationTip">
+                                        <li [@fadeIn]="location_input == '' ? 'open' : 'closed'">Type a location in the text box to see suggestions.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 

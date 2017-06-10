@@ -137,6 +137,7 @@ li{
   color: #222;
   transition: 0.5s all ease-in;
   margin: 6px;
+  margin-left: 26px;
   padding: 6px 12px 6px 12px;
   width: 160px;
   box-shadow: 0 0 0 0 #000;
@@ -144,13 +145,13 @@ li{
 
 .inp-solid:hover{
   background: rgba(240, 240, 240, 0.9);
-  width: 80%;
+  width: 100%;
   box-shadow: 0 0 0 0 #000;
 }
 
 .inp-solid:focus{
   background: rgba(240, 240, 240, 0.9);
-  width: 80%;
+  width: 100%;
   box-shadow: 0 0 0 0 #000;
 }
 
@@ -262,4 +263,49 @@ li{
 
 .weather-icons:nth-child(4){
   opacity: 0.2;
+}
+
+.suggestions{
+  margin: 0;
+  margin-left: 0px;
+  min-height: 65px;
+}
+
+.suggestions ul{
+  margin-top: 4px;
+  margin-bottom: 0px;
+}
+
+.suggestions li{
+  padding: 6px;
+  background: rgba(250, 250, 250, 0.36);
+  font-size: 10px;
+  color: #555;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  transition: 0.5s all ease-in-out;
+  cursor: pointer;
+}
+
+
+
+.suggestions li:hover{
+  background: rgba(250, 250, 250, 0.92);
+  color: #333;
+}
+
+.suggestions-title{
+  margin-top: 4px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  margin-left: 20px;
+  color: rgba(100, 100, 100, 0.5);
+  display: block;
+}
+
+.suggestion-empty{
+  /*width: 1px;
+  opacity:0.001;*/
+  border: 1px red;
 }

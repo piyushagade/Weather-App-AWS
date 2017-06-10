@@ -19,9 +19,6 @@ import { SharerService } from '../services/sharer.service';
 
 
 import { NgPipesModule } from 'ngx-pipes';
-import { RelativeDatePipe } from '../pipes/relative-date.pipe';
-import { SmartDatePipe } from '../pipes/smart-date.pipe';
-
 import { ChartsModule } from 'ng2-charts';
 import { LocalStorageModule } from 'angular-2-local-storage';
 import { AngularFireModule } from 'angularfire2';
@@ -57,7 +54,6 @@ import { AngularFireModule } from 'angularfire2';
     WeatherService,
     GeocoderService,
     SharerService,
-    // LocalStorageService,
 
   ],
   bootstrap: [

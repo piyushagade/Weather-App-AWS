@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, trigger, state, animate, transition, style } from '@angular/core';
 import { GeolocationService } from '../../services/location.service';
 import { WeatherService } from '../../services/weather.service';
 import { GeocoderService } from '../../services/geocoder.service';
@@ -6,6 +6,7 @@ import { SharerService } from '../../services/sharer.service';
 import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import { Subscription } from 'rxjs/Subscription';
 import { LocalStorageService } from 'angular-2-local-storage';
+import { Typeahead } from 'ng2-typeahead';
 
 @Component({
     selector: 'sc-current',
@@ -13,7 +14,15 @@ import { LocalStorageService } from 'angular-2-local-storage';
     styleUrls: [
         './current.styles.css'
     ],
-    providers: [ GeolocationService, WeatherService, GeocoderService ]
+    providers: [ GeolocationService, WeatherService, GeocoderService ],
+  animations: [
+    trigger("fadeIn", [
+      state("open", style({opacity: 1})),
+      state("closed", style({opacity: 0})),
+      transition("open => closed", animate( "20ms" )),
+      transition("closed => open", animate( "1400ms" )),
+    ])
+  ],
 })
 
 
@@ -60,6 +69,9 @@ export class CurrentComponent implements OnInit, OnDestroy{
     location_lat: string;
     location_lng: string;
     location_cityName: string;
+    suggestions: string[] = [];
+    cities = ['Abu Dhabi', 'Chelsea', 'Cairo', 'Paris', 'New Delhi', 'Sydney', 'San Francisco'];
+    location_input = "";
 
     private subscription: Subscription;
     private favourite_subscriber;
@@ -68,8 +80,8 @@ export class CurrentComponent implements OnInit, OnDestroy{
 
   constructor(private _lss: LocalStorageService, public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService) {
     
-    // Reset local search history
-    // this._lss.set('localSearchHistory', []);
+    // Uncomment to reset local search history
+    // this._lss.set('searches', []);
 
 
     // Get localStorage data
@@ -102,14 +114,6 @@ export class CurrentComponent implements OnInit, OnDestroy{
               if(this.favouriteCities.indexOf(snapshot.key) == -1) this.favouriteCities.push(snapshot.key);
             });
         })
-
-        // Get search history from the cloud
-        this.history_subscriber = this.user_history
-            .subscribe(
-              snapshots =>{ snapshots.forEach(snapshot => {
-              if(this.searchHistory.indexOf(snapshot.key) == -1) this.searchHistory.push(snapshot.key);
-            });
-        })
         
         this.setIdle(); 
       }
@@ -135,64 +139,70 @@ export class CurrentComponent implements OnInit, OnDestroy{
      this.af.auth.logout();
      this.name = null;
      
-     this.favourite_subscriber.unsubscribe();
-     this.history_subscriber.unsubscribe();
+     if(this.favourite_subscriber) this.favourite_subscriber.unsubscribe();
+     if(this.history_subscriber) this.history_subscriber.unsubscribe();
   }
 
-  // Get coordinates for the custom city entered by the user
-  getCoords(name: string, flag: boolean){
+  // Get weather data for the custom city entered by the user
+  getWeather(name: string, flag: boolean){
     //Capitalize words
     if(flag) name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()});
 
-    if(!this.loggedIn) {
-      this.searchHistory = this.localSearchHistory;
-    }
-
-    // Save searchHistory on cloud
-    if(this.searchHistory.indexOf(name) != -1){
-      this.searchHistory.splice(this.searchHistory.indexOf(name), 1);
-      this.af.database.object('/users/' + this.uid + '/history/' + name)
-      .remove()
-      .catch(error => {
-        console.log("Firebase disconnected. User has signed out.");
-      });
-    }
+    
+    this.searchHistory = this.localSearchHistory;
+    
 
     // Maintain recent search list to be of lenght 5
     if(this.searchHistory.length >= 5) {
       console.log("History size greater than 5. Removing " + this.searchHistory[0]);
-      this.af.database.object('/users/' + this.uid + '/history/' + this.searchHistory[0])
-      .remove()
-      .catch(error => {
-        console.log("Firebase disconnected. User has signed out.");
-      });
       this.searchHistory.splice(0, 1);    
-      
     }
     
     // Save in searchHistory array
     this.searchHistory.push(name);
 
     //Save localSearchHistory on localStorage
-    if(!this.loggedIn) {
-      this.localSearchHistory = this.searchHistory;
-      this._lss.set('searches', this.localSearchHistory);
-    }
-
-    // Save search history on cloud
-    this.af.database.object('/users/' + this.uid + '/history/' + name)
-      .set(Math.floor(Date.now() / 1000))
-      .catch(error => {
-        console.log("Firebase disconnected. User has signed out.");
-      });
-
-    
+    this.localSearchHistory = this.searchHistory;
+    this._lss.set('searches', this.localSearchHistory);
+  
     // Emit event and load weather data
     this.newCityName.emit(name);
   }
 
+  // Show places suggestion
+  showSuggestions(name: string){
+    this.location_input = name;
+
+    if((name.length % 3 == 0 ||
+     name.length == 1) &&
+      name != ""){
+      this.suggestions.length = 0;
+      
+      this._gc.getCoords(name).subscribe(
+        response => {
+          let address_component;
+
+            if(response.results[0]) {
+            for(let i = 0; i < response.results[0].address_components.length; i++) {
+              
+              address_component = response.results[0].address_components[i];  
+              
+              if(address_component &&
+              address_component.short_name.toString().length > 2 &&
+              address_component.short_name !== 'Undefined' &&
+              this.suggestions.indexOf(address_component.short_name) == -1) {
+                  this.suggestions.push(address_component.short_name);
+              }
+            } 
+          }
+        },
+        error => console.log("Couldn't get city name.")
+      );
+    }
+  }
+
   // When user clicks on the input text box
-  onChangeLocationFocus(){
+  onChangeLocationFocus(name: string){
     this.showChangeLocationTip = true;
   }
 
@@ -287,19 +297,31 @@ export class CurrentComponent implements OnInit, OnDestroy{
       
       this.favouriteCities.splice(this.favouriteCities.indexOf(this.cityName), 1);
   }
+  
+  // Handle click from suggestions
+  suggestionSelected(index){
+    this.getWeather(this.suggestions[index], false);
+    this.suggestions = [];    
+  }
+
+  // Handle click from random city suggestion
+  randomCitySelected(index){
+    this.getWeather(this.cities[index], false);
+  }
+
 
   // Handle click from favourites dropdown menu
   favouriteSelected(index){
-    this.getCoords(this.favouriteCities[index], false);
+    this.getWeather(this.favouriteCities[index], false);
   }
 
   // Handle click from search history dropdown menu
   historySelected(index){
-    this.getCoords(this.searchHistory[index], false);
+    this.getWeather(this.searchHistory[index], false);
   }
 
   localHistorySelected(index){
-    this.getCoords(this.localSearchHistory[index], false);
+    this.getWeather(this.localSearchHistory[index], false);
   }
 
   // Spinner functions
