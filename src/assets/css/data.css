@@ -1,0 +1,18 @@
+.current-temperature{
+    color: #333;
+    opacity: 0.8;
+    font-size: 160px;
+    font-weight: 600;
+    margin-right: 40px;
+}
+
+.unit-temperature{
+    color: #333;
+    opacity: 0.48;
+    font-size: 80px;
+    font-weight: 500;
+}
+.current-location{
+    
+}
+

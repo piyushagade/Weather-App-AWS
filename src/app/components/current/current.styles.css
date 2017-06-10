@@ -1,0 +1,265 @@
+.test{
+  border: 0px #FFF solid;
+}
+
+.card {
+  margin: 0px;
+  margin-left: 15px;
+  margin-right: 14px;
+  padding: 10px 16px 10px 16px;
+  position: relative;
+  border: 0;
+  width: 100%;
+  border-radius: 0;
+}
+
+.card-no-margin {
+  margin: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 10px 16px 10px 16px;
+  position: relative;
+  border: 0;
+  /*width: 100%;*/
+  border-radius: 0;
+}
+
+.card:first-child {
+  margin-top: 16px;
+}
+.card:last-child {
+  margin-bottom: 16px;
+}
+
+.card-2 {
+  background: rgba(255, 255, 255, 0.56);
+  transition: 1s all ease-in-out;
+}
+
+.card-3 {
+  background: rgba(255, 255, 255, 0.49);
+}
+
+.card-4 {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.card-5 {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.card-6 {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.card-7 {
+  background: rgba(255, 255, 255, 0.21);
+}
+
+.card-8 {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.card-9 {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.card-black {
+  background: rgba(20, 25, 26, 0.9);
+}
+
+.btn-solid{
+  background: rgba(240, 240, 240, 0.6);
+  border: 0px;
+  outline: 0px;
+  color: #222;
+  transition: 0.5s all ease-in;
+  margin-bottom: 6px;
+  padding: 6px 12px 6px 12px;
+}
+
+.btn-solid:hover{
+  background: rgba(240, 240, 240, 0.9);
+}
+
+.dropdown-toggle{
+  background: rgba(240, 240, 240, 0.6);
+  border: 0px;
+  border-radius: 30px;
+  outline: 0px;
+  color: #222;
+  transition: 0.5s all ease-in;
+  margin-left: 16px;
+  padding: 0;
+  height: 20px;
+  width: 20px;
+}
+
+.caret{
+  margin-left: -4px; 
+  margin-top: -4px;
+}
+
+.dropdown-toggle:hover{
+  background: rgba(240, 240, 240, 1);
+}
+
+.dropdown-menu{
+  background-color: rgba(240, 240, 240, 0.94);
+  padding: 10px; 
+  border: 0 ;
+  border-radius: 0;
+}
+
+.dropdown-item{
+  padding: 4px;
+}
+
+.dropdown-header{
+  text-align: center;
+  border-bottom: 1px solid #554;
+}
+
+li{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 300px;
+
+  padding: 6px;
+  transition: 0.5s all ease-in-out;
+}
+
+.inp-solid{
+  background: rgba(250, 250, 250, 0.36);
+  border: 0px;
+  outline: 0px;
+  color: #222;
+  transition: 0.5s all ease-in;
+  margin: 6px;
+  padding: 6px 12px 6px 12px;
+  width: 160px;
+  box-shadow: 0 0 0 0 #000;
+}
+
+.inp-solid:hover{
+  background: rgba(240, 240, 240, 0.9);
+  width: 80%;
+  box-shadow: 0 0 0 0 #000;
+}
+
+.inp-solid:focus{
+  background: rgba(240, 240, 240, 0.9);
+  width: 80%;
+  box-shadow: 0 0 0 0 #000;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: rgba(60, 60, 60, 0.9);
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: rgba(60, 60, 60, 0.9);
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: rgba(60, 60, 60, 0.9);
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: rgba(60, 60, 60, 0.9);
+}
+
+.no-left-padding{
+    padding-left: 0;
+}
+.no-right-padding{
+    padding-right: 0;
+}
+
+.no-padding{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.current-temperature{
+    color: #333;
+    opacity: 0.8;
+    font-size: 140px;
+    font-weight: 600;
+    margin-right: 30px;
+}
+
+.unit-temperature{
+    color: #333;
+    opacity: 0.48;
+    font-size: 80px;
+    font-weight: 500;
+}
+
+.center-div{
+    width: auto;
+    position: relative;
+    margin: auto auto;
+}
+
+.faint{
+    opacity: 0.7;
+}
+
+.gutter{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.weather-icons-now{
+  width: 100%; 
+  height: 120px; 
+  text-align: left; 
+  margin-left: 20px;
+  margin-right: 80px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.weather-icons-now .small{
+  bottom: 10px;
+  text-align: center;
+}
+
+.weather-icon-now{
+  font-size: 80px;
+  margin-top: 10px; 
+  margin-left: 10px; 
+}
+
+.weather-icons{
+  width: 100%; 
+  height: 60px;
+  text-align: center;
+  margin-top: 10px; 
+}
+
+.weather-icon{
+  width: 60px;
+  font-size: 40px;
+}
+
+.weather-icons .small{
+  position: absolute;
+  margin-left: -20px; 
+  bottom: 0px;
+}
+
+.in-1-hr{
+  opacity: 0.84;
+}
+
+.in-3-hr{
+  opacity: 0.64;
+}
+
+.in-9-hr{
+  opacity: 0.36;
+}
+
+.weather-icons:nth-child(4){
+  opacity: 0.2;
+}

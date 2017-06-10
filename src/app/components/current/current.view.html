@@ -1,0 +1,209 @@
+<div class="container">
+    <div class="row">
+
+        <!--Temperature and Icon column-->
+        <div class="col-sm-12 col-md-12 col-lg-6 col-md-seperator no-right-padding test">
+            <div class="card-no-margin card-2 test">
+                <div class="row">
+                    <!--Current weather icon-->
+                    <div class="col-sm-12 col-md-3 col-lg-4">
+                        <div class="weather-icons-now test center-div">
+                            <i *ngIf="wd_currently_icon === 'partly-cloudy-day'" class="wi wi-day-sunny-overcast weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'partly-cloudy-night'" class="wi wi-night-alt-cloudy weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'rain'" class="wi wi-rain test weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'clear-day'" class="wi wi-day-sunny weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'clear-night'" class="wi wi-night-clear weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'fog'" class="wi wi-fog weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'sleet'" class="wi sleet weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'wind'" class="wi wi-strong-wind weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'snow'" class="wi wi-snowflake-cold weather-icon-now" ></i>
+                            <i *ngIf="wd_currently_icon === 'cloudy'" class="wi wi-cloud weather-icon-now" ></i><br/>
+                            <span class="small">Right now</span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-9 col-lg-8  center-div">
+                        <div class="row  center-div">
+                            
+                            <!--1 hr later icon-->
+                            <div class="col-sm-0 col-md-4 col-lg-4 center-div">
+                                <div class="weather-icons in-1-hr test">
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'partly-cloudy-day'" class="wi wi-day-sunny-overcast weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'partly-cloudy-night'" class="wi wi-night-alt-cloudy weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'rain'" class="wi wi-rain test weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'clear-day'" class="wi wi-day-sunny weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'clear-night'" class="wi wi-night-clear weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'fog'" class="wi wi-fog weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'sleet'" class="wi sleet weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'wind'" class="wi wi-strong-wind weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'snow'" class="wi wi-snowflake-cold weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_1hr.icon === 'cloudy'" class="wi wi-cloud weather-icon"></i><br/>
+                                    <span class="small">In 1 hr</span>
+                                </div>
+                            </div>
+
+                            <!--3 hrs later icon-->
+                            <div class="col-sm-0 col-md-4 col-lg-4 center-div">
+                                <div class="weather-icons in-3-hr test .hidden-md">
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'partly-cloudy-day'" class="wi wi-day-sunny-overcast weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'partly-cloudy-night'" class="wi wi-night-alt-cloudy weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'rain'" class="wi wi-rain test weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'clear-day'" class="wi wi-day-sunny weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'clear-night'" class="wi wi-night-clear weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'fog'" class="wi wi-fog weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'sleet'" class="wi sleet weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'wind'" class="wi wi-strong-wind weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'snow'" class="wi wi-snowflake-cold weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_3hr.icon === 'cloudy'" class="wi wi-cloud weather-icon"></i><br/>
+                                    <span class="small">In 3 hrs</span>
+                                </div>
+                            </div>
+
+                            <!--9 hrs later icon-->
+                            <div class="col-sm-0 col-md-4 col-lg-4 center-div">
+                                <div class="weather-icons in-9-hr test .hidden-md">
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'partly-cloudy-day'" class="wi wi-day-sunny-overcast weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'partly-cloudy-night'" class="wi wi-night-alt-cloudy weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'rain'" class="wi wi-rain test weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'clear-day'" class="wi wi-day-sunny weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'clear-night'" class="wi wi-night-clear weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'fog'" class="wi wi-fog weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'sleet'" class="wi sleet weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'wind'" class="wi wi-strong-wind weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'snow'" class="wi wi-snowflake-cold weather-icon"></i>
+                                    <i *ngIf="wd_weatherData_9hr.icon === 'cloudy'" class="wi wi-cloud weather-icon"></i><br/>
+                                    <span class="small">In 9 hrs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Temperature and temperature unit-->
+            <div class="center-div card-no-margin card-3 test">
+                    <div style="width: auto; text-align: center; margin-top: -50px;">
+                        <span class="current-temperature">{{ wd_current_temperature | round }}</span>
+                        <span class="unit-temperature"><img src="../../../assets/images/sky_grey.png" height="60%"></span>
+                    </div>
+            </div>
+            
+            <!--Welcome message and login info-->
+            <div class="center-div test">
+                <div class="card-no-margin card-4" style="margin-top: 16px;">
+                    <span>
+                        Welcome to SkyCast weather app. See real-time weather for any location on Earth. Once you login, you can store search history and mark places as favourite.
+                    </span>
+                </div>
+                <div class="card-no-margin card-6"> 
+                    <p *ngIf="loggedIn">Hey there {{username}}. <br/>
+                        Now that you are logged-in, you can now save your favourite cities using <i class="small material-icons test" style="padding-top: 2px;">favorite</i> button, and remove the city from the list by clicking on the button again. To see the weather at your location, click on <i class="small material-icons test" style="padding-top: 2px;">my_location</i>.
+                    </p>
+                    <p *ngIf="!loggedIn">
+                        Login to access more features. Its free to use and free of ads. Forever.
+                    </p>
+                    
+                    <button class="btn-solid" (click)="logout()" *ngIf="loggedIn">Logout</button>
+                    <button class="btn-solid"  (click)="login()" *ngIf="!loggedIn">Login w/ Facebook</button>
+                </div>
+            </div>
+        </div>
+
+        <!--Other information coloumn-->
+        <div class="col-sm-12 col-md-12 col-lg-6 test no-right-padding">
+                <div class="col-sm-12 col-md-12 col-lg-12 no-right-padding no-left-padding">
+                    <span id="current-weather" style="display: none;">{{ wd_currently_icon }}</span>
+                    
+                    <div class="card-no-margin card-2" style="z-index: 10;"> 
+                        <span class="faint small">
+                            Location:
+                            <i *ngIf="!locationDenied" class="medium material-icons test" style="float: right; margin-left: 12px;" (click)="goToMyLocation()">my_location</i>
+                            <i class="medium material-icons test" style="float: right; margin-left: 12px;" *ngIf="loggedIn && favouriteCities.indexOf(cityName) == -1" (click)="saveLocation()">favorite_border</i>
+                            <i class="medium material-icons test" style="float: right; margin-left: 12px;" *ngIf="loggedIn && favouriteCities.indexOf(cityName) > -1" (click)="removeLocation()">favorite</i>
+                        </span><br/>
+                        
+                        <div class="dropdown">{{ cityName }}
+                            <button class="btn-solid dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <template [ngIf] = "localSearchHistory != null">
+                                    <li class="dropdown-header" *ngIf="localSearchHistory.length > 0">Search history</li>
+                                    <li *ngIf="localSearchHistory.length == 0"  class="dropdown-item disabled">No previous searches</li>
+                                    
+                                    <span *ngFor="let local_history_city of localSearchHistory; let k = index"><li class="dropdown-item" (click)="localHistorySelected(k)"><a>{{ local_history_city }}</a></li></span>
+                                </template>
+
+                                <li *ngIf="localSearchHistory == null"  class="dropdown-item disabled">History can't be saved.</li>
+                                <li *ngIf="localSearchHistory == null"  class="dropdown-item disabled">Don't use Icognito mode.</li>
+
+                                
+                                <template [ngIf] = "loggedIn">
+                                    <li class="dropdown-header">Saved locations</li>
+                                    <span *ngFor="let favourite_city of favouriteCities; let i = index" ><li class="dropdown-item" (click)="favouriteSelected(i)"><a>{{ favourite_city }}</a></li></span>
+                                    <span *ngIf="favouriteCities.length == 0" ><li class="dropdown-item disabled"><a>No favourite locations</a></li></span>
+                                </template>
+                            </ul>
+                        </div>
+
+                        <div class="row">
+                            <input type="text" class="inp-solid" style="margin-left: 10px;" [(ngModel)]='custom_city' #newLocation [placeholder]="showChangeLocationTip ? 'Enter a city and press enter.' : 'Change location...'" (blur)="onChangeLocationBlur()" (focus)="onChangeLocationFocus()" (keyup.enter)="getCoords(newLocation.value, true)"/>
+                        </div>
+                    </div>
+
+                    <div class="card-no-margin card-3"> 
+                        <span class="faint small">Right now:</span><br>
+                        <span> {{ wd_currently.summary }}</span>
+                    </div>
+
+                    <div class="card-no-margin card-4"> 
+                        <span class="faint small">In few hours:</span><br>
+                        {{ wd_hourly.summary }}
+                    </div>
+                    
+                    <div class="card-no-margin card-5"> 
+                        <span class="faint small">This week:</span><br>
+                        {{ wd_daily.summary }}
+                    </div>
+            </div>
+            
+            <!--Other weather information-->
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4 no-padding">
+                    <div class="card card-3"> 
+                        <span class="small">Humidity:</span>
+                        {{ wd_currently.humidity * 100 | round  }} %
+                    </div>
+                    
+                    <div class="card card-4"> 
+                        <span class="small">Wind speed:</span>
+                        {{ wd_currently.windSpeed }} mph
+                    </div>
+                    
+                    <div class="card card-5"> 
+                        <span class="small">Visibility:</span>
+                        {{ wd_currently.visibility }} / 10
+                    </div>
+                </div>
+
+                <div class="col-sm-8 col-md-8 col-lg-8 no-padding">
+                    <div class="card card-6"> 
+                        <span class="small">Cloud cover:</span>
+                        {{ wd_currently.cloudCover * 100 | round }} %
+                    </div>
+                    
+                    <div class="card card-7"> 
+                        <span class="small">Timezone:</span>
+                        {{ wd_timezone }}
+                    </div>
+                    
+                    <div class="card card-8"> 
+                        <span class="small">Current time:</span>
+                        {{ (wd_currently.time + wd_timezone_offset * 3600) * 1000 | date: 'medium' }} <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

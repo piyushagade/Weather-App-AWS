@@ -1,0 +1,69 @@
+
+.card-no-margin {
+  margin: 0px;
+  margin-left: 18px;
+  margin-right: 0px;
+  margin-bottom: 20px;
+  padding: 10px 16px 10px 16px;
+  position: relative;
+  border: 0;
+  width: 100%;
+  border-radius: 0;
+}
+
+
+.card:first-child {
+  margin-top: 16px;
+}
+.card:last-child {
+  margin-bottom: 16px;
+}
+
+
+.card-2 {
+  background: rgba(255, 255, 255, 0.56);
+  transition: 1s all ease-in-out;
+}
+
+.card-3 {
+  background: rgba(255, 255, 255, 0.49);
+}
+
+.card-4 {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.card-5 {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.card-6 {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.card-7 {
+  background: rgba(255, 255, 255, 0.21);
+}
+
+.card-8 {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.card-9 {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.card-black {
+  background: rgba(20, 25, 26, 0.9);
+}
+
+.weather-icons{
+  width: auto; 
+  text-align: center; 
+}
+
+.weather-icon{
+  font-size : 60px; 
+  margin-top: 20px; 
+  margin-bottom: 20px;
+}
