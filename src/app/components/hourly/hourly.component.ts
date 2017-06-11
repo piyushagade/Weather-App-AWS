@@ -79,7 +79,7 @@ export class HourlyComponent implements OnInit, OnDestroy{
     ngOnInit() {
         // Get weather data from home component
         this.subscription = this._s.notifyObservable$.subscribe((res) => {
-            if (res.hasOwnProperty('currently')) this.onWeatherGet(res);
+            if (res.hasOwnProperty('weather')) this.onWeatherGet(res);
             else if (res.length == 8) this.onWeatherHistoryGet(res);            
         });
     }
@@ -90,7 +90,7 @@ export class HourlyComponent implements OnInit, OnDestroy{
 
     // Set variables once weather data is obtained
     onWeatherGet(res){
-        this.weatherData = res;
+        this.weatherData = res.weather;
         this.wd_timezone = this.weatherData.timezone.replace(/_/g," ");
         this.wd_currently = this.weatherData.currently;
         this.wd_hourly = this.weatherData.hourly;

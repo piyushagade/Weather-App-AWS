@@ -31,7 +31,7 @@ export class DailyComponent implements OnInit, OnDestroy{
   ngOnInit() {
     // Subscribe to new weather data
     this.subscription = this._s.notifyObservable$.subscribe((res) => {
-        if (res.hasOwnProperty('currently')) this.onWeatherGet(res);
+        if (res.hasOwnProperty('weather')) this.onWeatherGet(res);
     });
   }
 
@@ -41,6 +41,7 @@ export class DailyComponent implements OnInit, OnDestroy{
 
   // Set variables when new weather data arrives
   onWeatherGet(res){
+    res = res.weather;
     this.weatherData = res;
     this.wd_timezone = this.weatherData.timezone.replace(/_/g," ");
     this.wd_currently = this.weatherData.currently;

@@ -32,10 +32,7 @@ export class HomeComponent {
   showChangeLocationTip = false;
   weatherLoaded = false;
   locationDenied: boolean = false;
-
-  custom_city: string = "";
-
-
+  cachedWeather = false;
 
   // Weather information
   weatherData: any;
@@ -55,6 +52,7 @@ export class HomeComponent {
   current_lng: string;
   location_lat: string;
   location_lng: string;
+  custom_city: string = "";
   location_cityName: string;
 
   @Output() weatherReceived = new EventEmitter();
@@ -73,11 +71,6 @@ export class HomeComponent {
           this.location_lng = this.current_lng;
           
           this.getCityName(this.current_lat, this.current_lng);
-
-          // Get weather data for current coordinates
-          this.weatherLoaded = false;
-          this.cityName = this.location_cityName;
-          this.getWeatherByCityName();
         }
       )}
 
@@ -87,6 +80,10 @@ export class HomeComponent {
       response => {
           this.cityName = JSON.stringify(response.results[0].formatted_address).replace(/"/g,'');
           if(this.location_cityName === undefined) this.location_cityName = this.cityName;
+          
+          // Get weather data for current coordinates
+          this.weatherLoaded = false;
+          this.getWeatherByCityName();
 
           // Share cityName
           this._s.sendCityName({ cityName: this.cityName });
@@ -106,6 +103,9 @@ export class HomeComponent {
 
   // Show weather from user's location when asked for manually
   goToMyLocation(){
+    this.cityName = this.location_cityName;
+    this.setBusy();
+    
     this.getWeatherByCityName();
   }
 
@@ -118,6 +118,7 @@ export class HomeComponent {
     this._ws.getWeather(this.cityName)
       .subscribe(
         response => {
+          this.cachedWeather = response.cache.weather;
           this.weatherData = response.current;
           this.weatherHistory = response.history
         },
@@ -139,7 +140,7 @@ export class HomeComponent {
     this.wd_current_temperature = this.wd_currently.temperature;
 
     // Share data to other components do they can update their views
-    this._s.sendWeatherData(this.weatherData);
+    this._s.sendWeatherData({weather: this.weatherData, cached: this.cachedWeather});
     this._s.sendWeatherHistory(this.weatherHistory);
   }
 

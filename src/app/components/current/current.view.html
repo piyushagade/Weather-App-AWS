@@ -81,10 +81,13 @@
             </div>
             
             <!--Temperature and temperature unit-->
-            <div class="center-div card-no-margin card-3 test">
+            <div class="center-div card-no-margin card-3 test" (click)="changeUnits()">
                     <div style="width: auto; text-align: center; margin-top: -50px;">
-                        <span class="current-temperature">{{ wd_current_temperature | round }}</span>
-                        <span class="unit-temperature"><img src="../../../assets/images/sky_grey.png" height="60%"></span>
+                        <span class="current-temperature">{{ wd_current_temperature_display | round }}</span>
+                        <span class="unit-temperature">
+                            <img *ngIf="temperatureUnits" src="../../../assets/images/sky_grey.png" height="60%">
+                            <img *ngIf="!temperatureUnits" src="../../../assets/images/sky_c.png" height="60%">
+                        </span>
                     </div>
             </div>
             
@@ -118,8 +121,9 @@
                         <span class="faint small">
                             Location:
                             <i *ngIf="!locationDenied" class="medium material-icons test" style="float: right; margin-left: 12px;" (click)="goToMyLocation()">my_location</i>
-                            <i class="medium material-icons test" style="float: right; margin-left: 12px;" *ngIf="loggedIn && favouriteCities.indexOf(cityName) == -1" (click)="saveLocation()">favorite_border</i>
-                            <i class="medium material-icons test" style="float: right; margin-left: 12px;" *ngIf="loggedIn && favouriteCities.indexOf(cityName) > -1" (click)="removeLocation()">favorite</i>
+                            <i class="medium material-icons action-icons test" *ngIf="loggedIn && favouriteCities.indexOf(cityName) == -1" (click)="saveLocation()">favorite_border</i>
+                            <i class="medium material-icons action-icons test" *ngIf="loggedIn && favouriteCities.indexOf(cityName) > -1" (click)="removeLocation()">favorite</i>
+                            <i *ngIf="cachedWeather" class="medium material-icons  action-icons test" (click)="refreshCachedData()">cached</i>
                         </span><br/>
                         
                         <div class="dropdown">{{ cityName }}
@@ -174,7 +178,7 @@
 
                                 <!--Random places-->
                                 <ul *ngIf="suggestions.length == 0 && showChangeLocationTip">
-                                        <li [@fadeIn]="location_input == '' ? 'open' : 'closed'">Type a location in the text box to see suggestions.</li>
+                                        <li>Type a location in the text box to see suggestions.</li>
                                 </ul>
                             </div>
                         </div>

@@ -42,6 +42,8 @@ export class CurrentComponent implements OnInit, OnDestroy{
     isBusy: boolean = true;
     locationDenied = false;
     showChangeLocationTip = false;
+    temperatureUnits = true;
+    cachedWeather = false;
 
     custom_city = "";
     @Output() newCityName = new EventEmitter();
@@ -52,6 +54,7 @@ export class CurrentComponent implements OnInit, OnDestroy{
     @Input() weatherData;
     cityName: string;
     wd_current_temperature: string = "";
+    wd_current_temperature_display: string = ""
     wd_currently: any = [];
     wd_hourly: any = [];
     wd_daily: any = [];
@@ -86,8 +89,6 @@ export class CurrentComponent implements OnInit, OnDestroy{
     
     // Uncomment to reset local search history
     // this._lss.set('searches', []);
-
-
 
     // Get localStorage data
     this.localSearchHistory = this._lss.get('searches');
@@ -124,16 +125,7 @@ export class CurrentComponent implements OnInit, OnDestroy{
             }
           }
         )
-      
-        
-        // // Get list of favourite cities from the cloud
-        // this.favourite_subscriber = this.user_favourites
-        //     .subscribe(
-        //       snapshots =>{ snapshots.forEach(snapshot => {
-        //       if(this.favouriteCities.indexOf(snapshot.key) == -1) this.favouriteCities.push(snapshot.key);
-        //     });
-        // })
-        
+
         this.setIdle(); 
       }
       else{
@@ -171,7 +163,6 @@ export class CurrentComponent implements OnInit, OnDestroy{
 
     // Maintain recent search list to be of lenght 5
     if(this._searchHistory.length >= 5) {
-      console.log("History size greater than 5. Removing " + this._searchHistory[0]);
       this._searchHistory.splice(0, 1);    
     }
     
@@ -191,8 +182,9 @@ export class CurrentComponent implements OnInit, OnDestroy{
   showSuggestions(name: string){
     this.location_input = name;
 
-    if((name.length % 3 == 0 ||
-     name.length == 1) &&
+    if(name && 
+      (name.length % 3 == 0 ||
+      name.length == 1) &&
       name != ""){
       this.suggestions.length = 0;
       
@@ -232,7 +224,7 @@ export class CurrentComponent implements OnInit, OnDestroy{
   ngOnInit() {
     // Subscribe to incoming data from home component
     this.subscription = this._s.notifyObservable$.subscribe((res) => {
-        if (res.hasOwnProperty('currently')) this.onWeatherGet(res);
+        if (res.hasOwnProperty('weather')) this.onWeatherGet(res);
         else if (res.hasOwnProperty('cityName')) this.onCityNameGet(res);
         else if (res.hasOwnProperty('locationDenied')) this.onLocationDeniedGet(res);
     });
@@ -246,6 +238,9 @@ export class CurrentComponent implements OnInit, OnDestroy{
 
   // Set weather variables once weather data is obtained from home component
   onWeatherGet(res){
+    this.cachedWeather = res.cached;
+
+    res = res.weather;
     this.weatherData = res;
     this.wd_timezone = this.weatherData.timezone.replace(/_/g," ");
     this.wd_timezone_offset = parseInt(this.weatherData.offset);
@@ -253,6 +248,8 @@ export class CurrentComponent implements OnInit, OnDestroy{
     this.wd_hourly = this.weatherData.hourly;
     this.wd_daily = this.weatherData.daily;
     this.wd_current_temperature = this.wd_currently.temperature;
+    if(this.temperatureUnits) this.wd_current_temperature_display = this.wd_current_temperature;
+    else this.wd_current_temperature_display = ((parseInt(this.wd_current_temperature) - 32) * 5 / 9).toString();
 
     // Set data for the weather icons
     this.wd_currently_icon = this.weatherData.currently.icon.trim();
@@ -294,12 +291,16 @@ export class CurrentComponent implements OnInit, OnDestroy{
     this.goToMyLocationEvent.emit();
   }
 
+  //Refresh cached data
+  refreshCachedData(){
+    this.newCityName.emit(this.cityName);
+  }
+
   // Save a location as favourite
   saveLocation(){
     // Add favourite
     this._us.addFavourite(this.cityName, this.uid).subscribe();
 
-    this.favouriteCities.push(this.cityName);
 
     // Get updated list from backend
     this._us.getFavourite(this.uid)
@@ -311,13 +312,6 @@ export class CurrentComponent implements OnInit, OnDestroy{
           }
         }
       )
-
-    // this.af.database.object('/users/' + this.uid + '/favourites/' + this.cityName)
-    //   .set(Math.floor(Date.now() / 1000))
-    //   .then(_ => console.log('Favourite city set.'))
-    //   .catch(error => {
-    //             console.log("Firebase disconnected. User has signed out.");
-    //   });
   }
 
   // Remove the location from favourites list
@@ -332,17 +326,14 @@ export class CurrentComponent implements OnInit, OnDestroy{
         this.location_favourites.splice(i, 1);
       }
     }
+  }
 
-    
-
-    // this.af.database.object('/users/' + this.uid + '/favourites/' + this.cityName)
-    //   .remove()
-    //   .then(_ => console.log('Favourite city deleted.'))
-    //   .catch(error => {
-    //             console.log("Firebase disconnected. User has signed out.");
-    //   });
-          // this.favouriteCities.splice(this.favouriteCities.indexOf(this.cityName), 1);
-      
+  // Change temperatur units
+  changeUnits(){
+    this.temperatureUnits = !this.temperatureUnits;
+    if(this.temperatureUnits) this.wd_current_temperature_display = this.wd_current_temperature;
+    else
+      this.wd_current_temperature_display = ((parseInt(this.wd_current_temperature) - 32) * 5 / 9).toString();
   }
   
   // Handle click from suggestions

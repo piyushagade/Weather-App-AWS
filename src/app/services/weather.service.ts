@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class WeatherService{
-    server = 'ec2-54-202-210-202.us-west-2.compute.amazonaws.com'
+    server = 'ec2-34-210-238-35.us-west-2.compute.amazonaws.com'
     weather = "http://" + this.server + ":3000/weather/**"
     
     constructor(private _jsonp: Jsonp, private _http: Http){}

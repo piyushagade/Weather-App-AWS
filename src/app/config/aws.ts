@@ -1,1 +1,1 @@
-export const server: string = 'ec2-54-202-210-202.us-west-2.compute.amazonaws.com';
+export const server: string = 'ec2-34-210-238-35.us-west-2.compute.amazonaws.com';
