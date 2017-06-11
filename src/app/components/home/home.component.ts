@@ -6,6 +6,7 @@ import { GeolocationService } from '../../services/location.service';
 import { WeatherService } from '../../services/weather.service';
 import { GeocoderService } from '../../services/geocoder.service';
 import { SharerService } from '../../services/sharer.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,7 @@ import { SharerService } from '../../services/sharer.service';
     '../../../assets/css/main.css',
     './home.styles.css'
   ],
-  providers: [ GeolocationService, WeatherService, GeocoderService, SharerService ],
+  providers: [ GeolocationService, WeatherService, GeocoderService, SharerService, UserService ],
   animations: [
     trigger("fadeInOut", [
       state("open", style({opacity: 1})),
@@ -58,30 +59,14 @@ export class HomeComponent {
 
   @Output() weatherReceived = new EventEmitter();
   
-  constructor(public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService) {
+  constructor(public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService, private _us: UserService) {
     
     // Get current coordinates using Geolocation API
     this.isBusy = true;
-    // this._gl.getCurrentPosition().forEach(
-    //     (position: Position) => {
-    //         // Get the name of the place using Google's geocoder API
-    //         this.current_lat = position.coords.latitude.toString();
-    //         this.current_lng = position.coords.longitude.toString();
-    //         this.location_lat = this.current_lat;
-    //         this.location_lng = this.current_lng;
-
-    //         this.getCityName(this.current_lat, this.current_lng);
-    //     }
-    //   )
-    //   .then(() => {
-        
-    //   })
-      
 
     this._gl.getCurrentPositionAPI()
       .subscribe(
         response => {
-          console.log(response.location.lat.toString(), response.location.lng.toString())
           this.current_lat = response.location.lat.toString();
           this.current_lng = response.location.lng.toString();
           this.location_lat = this.current_lat;

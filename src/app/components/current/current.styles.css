@@ -303,9 +303,3 @@ li{
   color: rgba(100, 100, 100, 0.5);
   display: block;
 }
-
-.suggestion-empty{
-  /*width: 1px;
-  opacity:0.001;*/
-  border: 1px red;
-}

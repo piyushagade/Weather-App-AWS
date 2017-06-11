@@ -16,6 +16,7 @@ import { GeolocationService } from '../services/location.service';
 import { WeatherService } from '../services/weather.service';
 import { GeocoderService } from '../services/geocoder.service';
 import { SharerService } from '../services/sharer.service';
+import { UserService } from '../services/user.service';
 
 
 import { NgPipesModule } from 'ngx-pipes';
@@ -54,6 +55,7 @@ import { AngularFireModule } from 'angularfire2';
     WeatherService,
     GeocoderService,
     SharerService,
+    UserService,
 
   ],
   bootstrap: [

@@ -1,8 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, trigger, state, animate, transition, style } from '@angular/core';
+
 import { GeolocationService } from '../../services/location.service';
 import { WeatherService } from '../../services/weather.service';
 import { GeocoderService } from '../../services/geocoder.service';
 import { SharerService } from '../../services/sharer.service';
+import { UserService } from '../../services/user.service';
+
 import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import { Subscription } from 'rxjs/Subscription';
 import { LocalStorageService } from 'angular-2-local-storage';
@@ -14,7 +17,7 @@ import { Typeahead } from 'ng2-typeahead';
     styleUrls: [
         './current.styles.css'
     ],
-    providers: [ GeolocationService, WeatherService, GeocoderService ],
+    providers: [ GeolocationService, WeatherService, GeocoderService, UserService  ],
   animations: [
     trigger("fadeIn", [
       state("open", style({opacity: 1})),
@@ -59,8 +62,9 @@ export class CurrentComponent implements OnInit, OnDestroy{
     wd_weatherData_3hr = [];
     wd_weatherData_9hr = [];
     wd_currently_icon: string = "clear-day";
+    location_favourites = [];
     favouriteCities: string[] = [];
-    searchHistory: any = [];
+    _searchHistory: any = [];
     localSearchHistory = {};
 
     // Location data
@@ -78,10 +82,11 @@ export class CurrentComponent implements OnInit, OnDestroy{
     private history_subscriber;
 
 
-  constructor(private _lss: LocalStorageService, public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService) {
+  constructor(private _lss: LocalStorageService, public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService, private _us: UserService) {
     
     // Uncomment to reset local search history
     // this._lss.set('searches', []);
+
 
 
     // Get localStorage data
@@ -106,14 +111,28 @@ export class CurrentComponent implements OnInit, OnDestroy{
               preserveSnapshot: true 
           }
         );
+
         
-        // Get list of favourite cities from the cloud
-        this.favourite_subscriber = this.user_favourites
-            .subscribe(
-              snapshots =>{ snapshots.forEach(snapshot => {
-              if(this.favouriteCities.indexOf(snapshot.key) == -1) this.favouriteCities.push(snapshot.key);
-            });
-        })
+
+      // Get list of favourite cities
+      this._us.getFavourite(this.uid)
+        .subscribe(
+          response => {
+            for(let j = 0; j < response.length; j++){
+              this.location_favourites[j] = { _id: response[j]._id, name: response[j].name};
+              this.favouriteCities[j] = this.location_favourites[j].name;
+            }
+          }
+        )
+      
+        
+        // // Get list of favourite cities from the cloud
+        // this.favourite_subscriber = this.user_favourites
+        //     .subscribe(
+        //       snapshots =>{ snapshots.forEach(snapshot => {
+        //       if(this.favouriteCities.indexOf(snapshot.key) == -1) this.favouriteCities.push(snapshot.key);
+        //     });
+        // })
         
         this.setIdle(); 
       }
@@ -131,8 +150,6 @@ export class CurrentComponent implements OnInit, OnDestroy{
       provider: AuthProviders.Facebook,
       method: AuthMethods.Popup
     });
-    // Reset search history array to make place for cloud data
-    this.searchHistory = [];
   }
 
   logout() {
@@ -149,20 +166,21 @@ export class CurrentComponent implements OnInit, OnDestroy{
     if(flag) name = name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()});
 
     
-    this.searchHistory = this.localSearchHistory;
+    this._searchHistory = this.localSearchHistory;
     
 
     // Maintain recent search list to be of lenght 5
-    if(this.searchHistory.length >= 5) {
-      console.log("History size greater than 5. Removing " + this.searchHistory[0]);
-      this.searchHistory.splice(0, 1);    
+    if(this._searchHistory.length >= 5) {
+      console.log("History size greater than 5. Removing " + this._searchHistory[0]);
+      this._searchHistory.splice(0, 1);    
     }
     
     // Save in searchHistory array
-    this.searchHistory.push(name);
+    if(this._searchHistory.indexOf(name) == -1)
+      this._searchHistory.push(name);
 
     //Save localSearchHistory on localStorage
-    this.localSearchHistory = this.searchHistory;
+    this.localSearchHistory = this._searchHistory;
     this._lss.set('searches', this.localSearchHistory);
   
     // Emit event and load weather data
@@ -278,24 +296,53 @@ export class CurrentComponent implements OnInit, OnDestroy{
 
   // Save a location as favourite
   saveLocation(){
-    this.af.database.object('/users/' + this.uid + '/favourites/' + this.cityName)
-      .set(Math.floor(Date.now() / 1000))
-      .then(_ => console.log('Favourite city set.'))
-      .catch(error => {
-                console.log("Firebase disconnected. User has signed out.");
-      });
+    // Add favourite
+    this._us.addFavourite(this.cityName, this.uid).subscribe();
+
+    this.favouriteCities.push(this.cityName);
+
+    // Get updated list from backend
+    this._us.getFavourite(this.uid)
+      .subscribe(
+        response => {
+          for(let j = 0; j < response.length; j++){
+            this.location_favourites[j] = { _id: response[j]._id, name: response[j].name};
+            this.favouriteCities[j] = this.location_favourites[j].name;
+          }
+        }
+      )
+
+    // this.af.database.object('/users/' + this.uid + '/favourites/' + this.cityName)
+    //   .set(Math.floor(Date.now() / 1000))
+    //   .then(_ => console.log('Favourite city set.'))
+    //   .catch(error => {
+    //             console.log("Firebase disconnected. User has signed out.");
+    //   });
   }
 
   // Remove the location from favourites list
   removeLocation(){
-    this.af.database.object('/users/' + this.uid + '/favourites/' + this.cityName)
-      .remove()
-      .then(_ => console.log('Favourite city deleted.'))
-      .catch(error => {
-                console.log("Firebase disconnected. User has signed out.");
-      });
+    var _id;
+
+    for(let i = 0; i < this.location_favourites.length; i++){
+      if(this.location_favourites[i].name == this.cityName){
+        _id = this.location_favourites[i]._id;
+        this._us.removeFavourite(_id).subscribe();
+        this.favouriteCities.splice(this.favouriteCities.indexOf(this.cityName), 1);
+        this.location_favourites.splice(i, 1);
+      }
+    }
+
+    
+
+    // this.af.database.object('/users/' + this.uid + '/favourites/' + this.cityName)
+    //   .remove()
+    //   .then(_ => console.log('Favourite city deleted.'))
+    //   .catch(error => {
+    //             console.log("Firebase disconnected. User has signed out.");
+    //   });
+          // this.favouriteCities.splice(this.favouriteCities.indexOf(this.cityName), 1);
       
-      this.favouriteCities.splice(this.favouriteCities.indexOf(this.cityName), 1);
   }
   
   // Handle click from suggestions
@@ -313,11 +360,6 @@ export class CurrentComponent implements OnInit, OnDestroy{
   // Handle click from favourites dropdown menu
   favouriteSelected(index){
     this.getWeather(this.favouriteCities[index], false);
-  }
-
-  // Handle click from search history dropdown menu
-  historySelected(index){
-    this.getWeather(this.searchHistory[index], false);
   }
 
   localHistorySelected(index){
