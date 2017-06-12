@@ -2,6 +2,7 @@
     <br>
     <div class="row test">
         <div class="row">
+            <!--Header and options-->
             <div class="col-xs-12 col-sm-12 col-md-12 card-no-margin card-4">
                 <a class="btn-solid" [ngClass]='{"active": mode === "hourly"}' (click)="changeMode('hourly')">Next 12 hours</a>
                 <a class="btn-solid" [ngClass]='{"active": mode === "history"}' (click)="changeMode('history')">History</a>
@@ -21,7 +22,8 @@
             </div>
 
             <div class="col-sm-12 col-md-12 card-no-margin card-4 test" >
-                <!--Hourly forecast-->
+                
+                <!--Hourly forecast graph-->
                 <div  *ngIf="mode === 'hourly'">
                     <canvas baseChart height="320"
                         [datasets]="barChartData"
@@ -32,7 +34,7 @@
                         [chartType]="barChartType"></canvas>
                 </div>
 
-                <!--Weather history-->
+                <!--Weather history graph-->
                 <div  *ngIf="mode === 'history'">
                     <canvas baseChart height="320"
                         [datasets]="historyChartData"

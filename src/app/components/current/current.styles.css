@@ -2,6 +2,8 @@
   border: 0px #FFF solid;
 }
 
+/*1. Cards*/
+
 .card {
   margin: 0px;
   margin-left: 15px;
@@ -20,7 +22,6 @@
   padding: 10px 16px 10px 16px;
   position: relative;
   border: 0;
-  /*width: 100%;*/
   border-radius: 0;
 }
 
@@ -68,6 +69,8 @@
   background: rgba(20, 25, 26, 0.9);
 }
 
+
+/*2. Buttons and Inputs*/
 .btn-solid{
   background: rgba(240, 240, 240, 0.6);
   border: 0px;
@@ -82,17 +85,22 @@
   background: rgba(240, 240, 240, 0.9);
 }
 
+.dropdown{
+  margin-left: 8px;
+}
+
 .dropdown-toggle{
-  background: rgba(240, 240, 240, 0.6);
+  background: rgba(240, 240, 240, 0.48);
   border: 0px;
   border-radius: 30px;
   outline: 0px;
   color: #222;
   transition: 0.5s all ease-in;
   margin-left: 16px;
+  margin-top: 16px;
   padding: 0;
   height: 20px;
-  width: 20px;
+  width: 16px;
 }
 
 .caret{
@@ -137,7 +145,8 @@ li{
   color: #222;
   transition: 0.5s all ease-in;
   margin: 6px;
-  margin-left: 26px;
+  margin-left: 20px;
+  margin-top: 10px;
   padding: 6px 12px 6px 12px;
   width: 160px;
   box-shadow: 0 0 0 0 #000;
@@ -168,6 +177,8 @@ li{
   color: rgba(60, 60, 60, 0.9);
 }
 
+
+/*3. Miscellaneous*/
 .no-left-padding{
     padding-left: 0;
 }
@@ -210,6 +221,8 @@ li{
   margin-right: 5px;
 }
 
+
+/*4. Weather icons*/
 .weather-icons-now{
   width: 100%; 
   height: 120px; 
@@ -250,8 +263,16 @@ li{
 }
 
 .action-icons{
+  color: rgba(60, 60, 60, 0.8);
   float: right; 
   margin-left: 12px;
+  font-size: 20px;
+  transition: 0.4s all ease-in-out;
+  cursor: pointer;
+}
+
+.action-icons:hover{
+  color: #100;
 }
 
 .in-1-hr{
@@ -266,10 +287,6 @@ li{
   opacity: 0.36;
 }
 
-.weather-icons:nth-child(4){
-  opacity: 0.2;
-}
-
 .suggestions{
   margin: 0;
   margin-left: 0px;
@@ -278,6 +295,7 @@ li{
 
 .suggestions ul{
   margin-top: 4px;
+  margin-left: -10px;
   margin-bottom: 0px;
 }
 
@@ -293,8 +311,6 @@ li{
   cursor: pointer;
 }
 
-
-
 .suggestions li:hover{
   background: rgba(250, 250, 250, 0.92);
   color: #333;
@@ -309,93 +325,31 @@ li{
   display: block;
 }
 
-
-
-.wrapper {
-text-transform: uppercase;
-background: #ececec;
-color: #555;
-cursor: help;
-font-family: "Gill Sans", Impact, sans-serif;
-font-size: 20px;
-margin: 100px 75px 10px 75px;
-padding: 15px 20px;
-position: relative;
-text-align: center;
-width: 200px;
--webkit-transform: translateZ(0); /* webkit flicker fix */
--webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+.title{
+  color: rgba(50, 50, 50, 0.8);
+  font-size: 22px;
+  margin-bottom: 16px;
 }
 
-.wrapper .tooltip {
-background: #1496bb;
-bottom: 100%;
-color: #fff;
-display: block;
-left: -20px;
-margin-bottom: 15px;
-opacity: 0;
-padding: 20px;
-pointer-events: none;
-position: absolute;
-width: 100%;
--webkit-transform: translateY(10px);
-  -moz-transform: translateY(10px);
-  -ms-transform: translateY(10px);
-   -o-transform: translateY(10px);
-    transform: translateY(10px);
--webkit-transition: all .25s ease-out;
-  -moz-transition: all .25s ease-out;
-  -ms-transition: all .25s ease-out;
-   -o-transition: all .25s ease-out;
-    transition: all .25s ease-out;
--webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-  -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-  -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-   -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+.subtitle{
+  color: rgba(30, 30, 30, 0.98);
+  font-size: 18px;
+  padding-left: 6px;
+  padding-right: 6px;
+  margin-top: 16px;
 }
 
-/* This bridges the gap so you can mouse into the tooltip without it disappearing */
-.wrapper .tooltip:before {
-bottom: -20px;
-content: " ";
-display: block;
-height: 20px;
-left: 0;
-position: absolute;
-width: 100%;
+.paragraph{
+  color: rgba(30, 30, 30, 0.9);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-/* CSS Triangles - see Trevor's post */
-.wrapper .tooltip:after {
-border-left: solid transparent 10px;
-border-right: solid transparent 10px;
-border-top: solid #1496bb 10px;
-bottom: -10px;
-content: " ";
-height: 0;
-left: 50%;
-margin-left: -13px;
-position: absolute;
-width: 0;
+a{
+  color: rgba(0, 0, 0, 0.9);
 }
 
-.wrapper:hover .tooltip {
-opacity: 1;
-pointer-events: auto;
--webkit-transform: translateY(0px);
-  -moz-transform: translateY(0px);
-  -ms-transform: translateY(0px);
-   -o-transform: translateY(0px);
-    transform: translateY(0px);
-}
-
-/* IE can just show/hide with no transition */
-.lte8 .wrapper .tooltip {
-display: none;
-}
-
-.lte8 .wrapper:hover .tooltip {
-display: block;
+a:hover{
+  color: rgba(0, 0, 0, 1);
+  text-transform: none;
 }

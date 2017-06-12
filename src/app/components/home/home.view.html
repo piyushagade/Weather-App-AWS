@@ -2,27 +2,24 @@
     <div class="bramhan">
         <div id="gradient" class="gradient"></div>
         
-        <!--Spinner-->
-        <div class="loading" *ngIf="!weatherLoaded" [@fadeInOut]="isBusy ? 'open' : 'closed'">
-            <div class="spinner">
+        <!--Loadin screen-->
+        <div class="loading" *ngIf="!weatherLoaded || error != ''" [@fadeInOut]="isBusy ? 'open' : 'closed'">
+            
+            <!--Network error message-->
+            <div class="error" *ngIf="error=='network'">
+                <i class="material-icons error-icon">perm_scan_wifi</i><br/>
+                Looks like there is a network problem. Try in some time. If problem persists, contact developer at <a href="mailto:piyushagade@gmail.com">piyushagade@gmail.com</a> He will help you. He's a good chap.<br/>
+                <button class="btn-solid" (click)="resolveError()">Try again</button>
+            </div>
+
+            <!--Spinner-->
+            <div class="spinner" >
                 <div class="double-bounce1"></div>
                 <div class="double-bounce2"></div>
             </div>
         </div>
 
         <div class="galaxy">
-
-            <!--Top container-->
-            <div class="container-fluid">
-                <!--Top menu-->
-                <div class="row-fluid">
-                    <span class="small pull-right" style="float: right;">
-                        <a href="https://darksky.net/poweredby/" target="_new">Powered by Dark Sky</a>                        
-                    </span>
-                    <br>
-                </div>
-            </div>
-
             <!--Current weather component-->
             <sc-current
                 [weatherData]="weatherData"

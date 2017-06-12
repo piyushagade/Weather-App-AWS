@@ -1,8 +1,73 @@
+<div class="container" *ngIf="showHelp">
+    <div class="row">
+        <!--Help-->
+         <div class="col-sm-12 col-md-12 col-lg-12 no-right-padding test">
+            <div class="card-no-margin card-2 test">
+                <i class="medium material-icons action-icons test" style="font-size: 22px; margin-top: 6px;" (click)="toggleHelp()">clear</i>
+                <span class="title">Welcome to SkyCast!</span>
+            </div>
+                 
+            <div class="card-no-margin card-3 test">
+                 <span class="subtitle">What's a Fahrenheit?</span><br/>
+                 <div class="paragraph">
+                     If you need temperature in Celcius, click on the temperature displayed, and done!
+                 </div>
+            </div>
+            
+            
+            <div class="card-no-margin card-4 test">
+                <span class="subtitle">Cached content</span><br/>
+                <div class="paragraph">
+                    SkyCast uses caching at the server-side to oblivate unnecessarily duplicate calls within an appropriate timeframe (10 minutes in our case).
+                    So, if you see <i class="material-icons test" style="padding-top: 2px; font-size: 18px;" (click)="refreshCachedData()">cached</i> icon on the top-right corner, 
+                    it means the weather data is cached. The cached data can be at most 10 minutes old.
+                </div>
+            </div>
+
+            <div class="card-no-margin card-3 test">
+                 <span class="subtitle">Favourite locations</span><br/>
+                 <div class="paragraph">
+                     You can save your favourite locations on the cloud and can retrieve them on any other device as well. Just make sure you are logged-in.<br/>
+                     To see your favourites list, click on the <button class="btn-solid dropdown-toggle" style="margin: 0 2px 0 2px;"><span class="caret"></span></button> right beside the location.
+                 </div>
+            </div>
+
+            <div class="card-no-margin card-4 test">
+                 <span class="subtitle">Search history</span><br/>
+                 <div class="paragraph">
+                     SkyCast maintains a list of your 5 recent searches on your local machine. This list is enduring, and doesn't reset between sessions. You can see the list by clicking on
+                     <button class="btn-solid dropdown-toggle" style="margin: 0 2px 0 2px;"><span class="caret"></span></button>, which is right next to the location.
+                 </div>
+            </div>         
+
+            <div class="card-no-margin card-3 test">
+                 <span class="subtitle">Credits</span><br/>
+                 <div class="paragraph">
+                     SkyCast is powered by Google Geolocation API and Dark Sky API. Check their developer pages:<br/>
+                    <a class="small faint" href="https://darksky.net/poweredby/" target="_new">Weather information by Dark Sky</a><br/>
+                    <a class="small faint" href="https://developers.google.com/maps/documentation/geolocation/intro" target="_new">Location info by Google</a>   
+                 </div>
+            </div>           
+
+            <div class="card-no-margin card-4 test">
+                 <span class="subtitle">Developer</span><br/>
+                 <div class="paragraph">
+                     This web-app was developed by Piyush Agade using Angular 2, MongoDB, and Node Express. The 
+                     services are hosted on Amazon Web Services. The authentication is provided by Firebase.<br/>
+                     Suggestions are welcome.<br/>
+                    <a class="small faint" href="http://piyushagade.xyz" target="_new">My website</a><br/>
+                    <a class="small faint" href="https://linkedin.com/in/piyushagade" target="_new">LinkedIn</a> 
+                 </div>
+            </div>                 
+        </div>
+    </div><br>
+</div>
+
 <div class="container">
     <div class="row">
 
         <!--Temperature and Icon column-->
-        <div class="col-sm-12 col-md-12 col-lg-6 col-md-seperator no-right-padding test">
+        <div class="col-sm-12 col-md-12 col-lg-6 no-right-padding test">
             <div class="card-no-margin card-2 test">
                 <div class="row">
                     <!--Current weather icon-->
@@ -95,7 +160,7 @@
             <div class="center-div test">
                 <div class="card-no-margin card-4" style="margin-top: 16px;">
                     <span>
-                        Welcome to SkyCast weather app. See real-time weather for any location on Earth. Once you login, you can store search history and mark places as favourite.
+                        Welcome to SkyCast weather app. See real-time weather and weather history for any location on the planet Earth. Just use the textbox to input a new location.
                     </span>
                 </div>
                 <div class="card-no-margin card-6"> 
@@ -120,15 +185,17 @@
                     <div class="card-no-margin card-2" style="z-index: 10;"> 
                         <span class="faint small">
                             Location:
-                            <i *ngIf="!locationDenied" class="medium material-icons test" style="float: right; margin-left: 12px;" (click)="goToMyLocation()">my_location</i>
+                            <i class="medium material-icons action-icons test" (click)="toggleHelp()">help</i>
+                            <i *ngIf="!locationDenied" class="medium material-icons action-icons test" (click)="goToMyLocation()">my_location</i>
                             <i class="medium material-icons action-icons test" *ngIf="loggedIn && favouriteCities.indexOf(cityName) == -1" (click)="saveLocation()">favorite_border</i>
                             <i class="medium material-icons action-icons test" *ngIf="loggedIn && favouriteCities.indexOf(cityName) > -1" (click)="removeLocation()">favorite</i>
-                            <i *ngIf="cachedWeather" class="medium material-icons  action-icons test" (click)="refreshCachedData()">cached</i>
+                            <i *ngIf="cachedWeather" class="medium material-icons action-icons test" (click)="refreshCachedData()">cached</i>
+                            <i *ngIf="isBusy && isWorkingInBackground" class="medium material-icons action-icons test">query_builder</i>
+                            <i *ngIf="!isBusy && isWorkingInBackground" class="medium material-icons action-icons test">check</i>
                         </span><br/>
                         
                         <div class="dropdown">{{ cityName }}
                             <button class="btn-solid dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -139,9 +206,7 @@
                                     <span *ngFor="let local_history_city of localSearchHistory; let k = index"><li class="dropdown-item" (click)="localHistorySelected(k)"><a>{{ local_history_city }}</a></li></span>
                                 </template>
 
-                                <li *ngIf="localSearchHistory == null"  class="dropdown-item disabled">History can't be saved.</li>
-                                <li *ngIf="localSearchHistory == null"  class="dropdown-item disabled">Don't use Icognito mode.</li>
-
+                                <li *ngIf="localSearchHistory == null"  class="dropdown-item disabled">No searches yet.</li>
                                 
                                 <template [ngIf] = "loggedIn">
                                     <li class="dropdown-header">Saved locations</li>
@@ -152,7 +217,7 @@
                         </div>
 
                         <div class="row">
-                            <input type="text" class="inp-solid" style="margin-left: 10px;" 
+                            <input type="text" class="inp-solid"
                                 [(ngModel)]='custom_city' 
                                 #newLocation
                                 (keyup)="showSuggestions(newLocation.value)" 
@@ -167,12 +232,12 @@
                             <div class="suggestions">
                                 <!--Suggestion-->
                                 <span class="suggestions-title">Suggestions</span>
-                                <ul class=""  *ngIf="suggestions.length > 0">
+                                <ul *ngIf="suggestions.length > 0">
                                     <li *ngFor="let suggestion of suggestions; let i = index;" (click)="suggestionSelected(i)">{{ suggestion }}</li>
                                 </ul>
 
                                 <!--Random places-->
-                                <ul class=""  *ngIf="suggestions.length == 0 && !showChangeLocationTip">
+                                <ul  *ngIf="suggestions.length == 0 && !showChangeLocationTip">
                                     <li *ngFor="let suggestion of cities; let i = index;" (click)="randomCitySelected(i)">{{ suggestion }}</li>
                                 </ul>
 
@@ -220,19 +285,19 @@
                 </div>
 
                 <div class="col-sm-8 col-md-8 col-lg-8 no-padding">
-                    <div class="card card-6"> 
+                    <div class="card card-5"> 
                         <span class="small">Cloud cover:</span>
                         {{ wd_currently.cloudCover * 100 | round }} %
                     </div>
                     
-                    <div class="card card-7"> 
+                    <div class="card card-6"> 
                         <span class="small">Timezone:</span>
                         {{ wd_timezone }}
                     </div>
                     
-                    <div class="card card-8"> 
+                    <div class="card card-7"> 
                         <span class="small">Current time:</span>
-                        {{ (wd_currently.time + wd_timezone_offset * 3600) * 1000 | date: 'medium' }} <br>
+                        {{ wd_currently.time * 1000 | date: 'medium' }} <br>
                     </div>
                 </div>
             </div>

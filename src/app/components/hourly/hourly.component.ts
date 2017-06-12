@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 
 export class HourlyComponent implements OnInit, OnDestroy{
+    
     // Weather information
     @Input() weatherData;
     @Input() weatherHistory;
@@ -32,7 +33,7 @@ export class HourlyComponent implements OnInit, OnDestroy{
 
     // Chart data
     barChartData: any[] = [
-        {data: [], label: 'Hourly forecast'},
+        {data: [], label: 'Hourly'},
     ];
 
     barChartData_temperature: any[] = [
@@ -67,12 +68,12 @@ export class HourlyComponent implements OnInit, OnDestroy{
         {data: [], label: 'History'},
     ];
 
+    // Subscriptions
     private subscription: Subscription;
 
     // Flags
     mode: string = "hourly";
     metric: string = "temperature";
-
 
     constructor(private _s: SharerService) {}
 
@@ -190,11 +191,11 @@ export class HourlyComponent implements OnInit, OnDestroy{
   public barChartColors:Array<any> = [
     {  
         // dark grey
-        backgroundColor: 'rgba(77,83,96,0.2)',
-        borderColor: 'rgba(77,83,96,1)',
-        pointBackgroundColor: 'rgba(77,83,96,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
+        backgroundColor: 'rgba(180,180,180,0.2)',
+        borderColor: 'rgba(30,30,30,0.6)',
+        pointBackgroundColor: 'rgba(30,30,30,0.4)',
+        pointBorderColor: 'rgba(230,230,230,0.8)',
+        pointHoverBackgroundColor: 'rgba(230,230,230,0.6)',
         pointHoverBorderColor: 'rgba(77,83,96,1)'
     },
     {   // grey

@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter, animate, style, state, transition, trigger } from '@angular/core';
-
 import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable } from 'angularfire2';
 
 import { GeolocationService } from '../../services/location.service';
@@ -12,7 +11,6 @@ import { UserService } from '../../services/user.service';
   selector: 'app-home',
   templateUrl: './home.view.html',
   styleUrls: [
-    '../../../assets/css/main.css',
     './home.styles.css'
   ],
   providers: [ GeolocationService, WeatherService, GeocoderService, SharerService, UserService ],
@@ -29,10 +27,11 @@ import { UserService } from '../../services/user.service';
 export class HomeComponent {
   // Flags
   isBusy: boolean = true;
-  showChangeLocationTip = false;
-  weatherLoaded = false;
+  showChangeLocationTip: boolean = false;
+  weatherLoaded: boolean = false;
   locationDenied: boolean = false;
-  cachedWeather = false;
+  cachedWeather: boolean = false;
+  error: string = "";
 
   // Weather information
   weatherData: any;
@@ -54,14 +53,16 @@ export class HomeComponent {
   location_lng: string;
   custom_city: string = "";
   location_cityName: string;
-
-  @Output() weatherReceived = new EventEmitter();
   
-  constructor(public af: AngularFire, private _gl: GeolocationService, private _ws: WeatherService, private _gc: GeocoderService, private _s: SharerService, private _us: UserService) {
+  constructor(public af: AngularFire, 
+    private _gl: GeolocationService, 
+    private _ws: WeatherService, 
+    private _gc: GeocoderService, 
+    private _s: SharerService, 
+    private _us: UserService) {
     
-    // Get current coordinates using Geolocation API
+    // Get current coordinates using Geolocation API and show its weather
     this.isBusy = true;
-
     this._gl.getCurrentPositionAPI()
       .subscribe(
         response => {
@@ -72,7 +73,8 @@ export class HomeComponent {
           
           this.getCityName(this.current_lat, this.current_lng);
         }
-      )}
+      )
+  }
 
   // Get city name from coordinates acquired in the constructor
   getCityName(lat: string, long: string){
@@ -84,53 +86,53 @@ export class HomeComponent {
           // Get weather data for current coordinates
           this.weatherLoaded = false;
           this.getWeatherByCityName();
-
-          // Share cityName
-          this._s.sendCityName({ cityName: this.cityName });
       },
       error => console.log("Couldn't get city name.")
     );
   }
 
 
-  // Get coordinates from city name when user switches to another location
+  // When user wants to change location
   changeLocation(name: string){
     this.cityName = name;
-
-    this.setBusy();
     this.getWeatherByCityName();
   }
 
   // Show weather from user's location when asked for manually
   goToMyLocation(){
     this.cityName = this.location_cityName;
-    this.setBusy();
-    
     this.getWeatherByCityName();
   }
 
   // Get weather data for current coordinates
   getWeatherByCityName(){
-    // Share cityName
-    this._s.sendCityName({ cityName: this.cityName });    
-
-    // Set weatherData
+    this.setBusy();
     this._ws.getWeather(this.cityName)
       .subscribe(
         response => {
           this.cachedWeather = response.cache.weather;
           this.weatherData = response.current;
-          this.weatherHistory = response.history
+          this.weatherHistory = response.history;
+          this.onWeatherGet();
         },
-        error => console.log("Error while getting weather data"),
-        () => this.onWeatherGet()
+        error => {
+          this.error = "network";
+          console.log("Error while getting weather data")
+        }
       );
   }
 
 
   // Set variables when new weather data is acquired
   onWeatherGet(){
+    // Reset error
+    this.error = "";
+
+    //Set idle
     this.setIdle();
+
+    // Share cityName
+    this._s.sendCityName({ cityName: this.cityName });
 
     this.wd_timezone = this.weatherData.timezone.replace(/_/g," ");
     this.wd_currently = this.weatherData.currently;
@@ -139,13 +141,13 @@ export class HomeComponent {
     this.wd_currently_icon = this.weatherData.currently.icon.trim();
     this.wd_current_temperature = this.wd_currently.temperature;
 
-    // Share data to other components do they can update their views
+    // Share data to other components so they can update their views
     this._s.sendWeatherData({weather: this.weatherData, cached: this.cachedWeather});
     this._s.sendWeatherHistory(this.weatherHistory);
   }
 
   // Handle if user denies permission to obtain user location
-  onLocationDeny(){
+  onLocationDenied(){
     this.locationDenied = true;
 
     // So, show weather of a random city instead
@@ -172,5 +174,10 @@ export class HomeComponent {
     setTimeout(function() {
       this.weatherLoaded = true;
     }.bind(this), 1400);
+  }
+
+  // Try resolving network error
+  resolveError(){
+    this.getWeatherByCityName();
   }
 }

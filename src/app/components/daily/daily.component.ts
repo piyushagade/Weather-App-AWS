@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 
 export class DailyComponent implements OnInit, OnDestroy{
+
   // Weather information
   @Input() weatherData;
   cityName: string;
@@ -24,6 +25,7 @@ export class DailyComponent implements OnInit, OnDestroy{
   maxTemperature: number;
   minTemperature: number;
 
+  // Subscriptions
   private subscription: Subscription;
 
   constructor(private _s: SharerService) {}
